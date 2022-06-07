@@ -8,7 +8,7 @@ export const endpoint = {
         try {
             const response = await axios.get(`${baseUrl}/movie/popular?api_key=${apiKey}&page=${page}`)
 
-            return response;
+            return response.data.results;
         } catch (err) {
             console.error(err);
         }
