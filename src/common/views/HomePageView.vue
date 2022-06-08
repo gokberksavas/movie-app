@@ -37,7 +37,7 @@ export default {
         <div class="flex-1 relative">
             <PageHeader @menu-opened="handleOpen"/>
             <div class="home__content">
-                <MovieList :blockTitle="'Most Popular Movies'"/>
+                <MovieList :blockTitle="'Most Popular Movies'" :endpoint="'popular'"/>
             </div>
         </div>
     </div>

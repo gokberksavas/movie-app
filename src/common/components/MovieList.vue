@@ -1,5 +1,5 @@
 <script>
-import { endpoint } from '../utils/api-utils'
+import { endpoint, favourites } from '../utils/api-utils'
 import { reactive, toRefs, onBeforeMount, watch} from 'vue'
 import MovieCard from './MovieCard.vue';
 
@@ -9,7 +9,7 @@ export default {
         blockTitle: String,
         endpoint: String
     },
-    setup() {
+    setup(props) {
         const state = reactive({
             movies: [],
             page: 1
@@ -20,7 +20,13 @@ export default {
             movies.value = await endpoint.getPopular(page);
         };
 
-        onBeforeMount(getPopularMovies(page));
+        onBeforeMount(() => {
+            if (props.endpoint === 'popular') {
+                getPopularMovies(page)
+            } else if (props.endpoint === 'favourites') {
+                movies.value = favourites.getFavourites();
+            }
+        });
 
         watch(page, () => {
             getPopularMovies(page.value);
@@ -44,7 +50,7 @@ export default {
         <div class="product__list-wrapper grid grid-cols-4 gap-4">
             <MovieCard v-for="movie in movies" :key="movie.id" :data="movie"/>
         </div>
-        <div class="text-2xl flex items-center justify-center mt-5">
+        <div v-if="endpoint === 'popular'" class="text-2xl flex items-center justify-center mt-5">
             <fa icon="chevron-left" class="mr-2 cursor-pointer hover:text-orange-600" @click="page !== 1 && page--"/>
             <span class="text-sky-800">{{page}}</span>
             <fa icon="chevron-right" class="ml-2 cursor-pointer hover:text-orange-600" @click="page++"/>
